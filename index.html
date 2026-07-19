@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Offline Music Player</title>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#17171c">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MusicPlayer">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ LIBRARY SCREEN (default, always visible on launch) ============ -->
+  <div id="libraryScreen">
+
+    <header class="topbar">
+      <h1>Your Music</h1>
+      <label class="add-music-btn" for="fileInput">
+        + Add Music
+        <input type="file" id="fileInput" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg" multiple hidden>
+      </label>
+    </header>
+
+    <p id="statusMsg" class="status-msg" hidden></p>
+
+    <div class="search-row">
+      <input type="search" id="searchInput" placeholder="Search songs" class="search-input">
+      <select id="sortSelect" class="sort-select">
+        <option value="title">Title (A–Z)</option>
+        <option value="recent">Recently added</option>
+      </select>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="all">All Songs</button>
+      <button class="tab-btn" data-tab="favorites">Favorites</button>
+      <button class="tab-btn" data-tab="playlists">Playlists</button>
+    </nav>
+
+    <!-- All Songs / Favorites tab content -->
+    <main id="songsView" class="scroll-area">
+      <ul id="songList" class="song-list"></ul>
+      <div id="emptyMsg" class="empty-state" hidden>
+        <p class="empty-title">No songs yet</p>
+        <label class="add-music-btn add-music-btn-large" for="fileInput2">
+          + Add Your First Song
+          <input type="file" id="fileInput2" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg" multiple hidden>
+        </label>
+      </div>
+      <div id="emptyFavMsg" class="empty-state" hidden>
+        <p class="empty-title">No favorites yet</p>
+        <p class="empty-sub">Tap the heart on any song to add it here.</p>
+      </div>
+    </main>
+
+    <!-- Playlists tab content -->
+    <main id="playlistsView" class="scroll-area" hidden>
+      <button id="newPlaylistBtn" class="new-playlist-btn">+ New Playlist</button>
+      <ul id="playlistList" class="song-list"></ul>
+      <div id="emptyPlaylistMsg" class="empty-state" hidden>
+        <p class="empty-title">No playlists yet</p>
+        <p class="empty-sub">Create one to start organizing your music.</p>
+      </div>
+    </main>
+
+    <!-- Single playlist detail view -->
+    <main id="playlistDetailView" class="scroll-area" hidden>
+      <div class="playlist-detail-header">
+        <button id="playlistBackBtn" class="back-pill-btn">‹ Playlists</button>
+        <button id="deletePlaylistBtn" class="delete-playlist-btn">Delete playlist</button>
+      </div>
+      <h2 id="playlistDetailTitle" class="playlist-detail-title">Playlist</h2>
+      <button id="addSongsToPlaylistBtn" class="new-playlist-btn">+ Add Songs</button>
+      <ul id="playlistSongList" class="song-list"></ul>
+      <div id="emptyPlaylistDetailMsg" class="empty-state" hidden>
+        <p class="empty-title">No songs in this playlist yet</p>
+      </div>
+    </main>
+
+  </div>
+  <!-- ============ END LIBRARY SCREEN ============ -->
+
+  <!-- Mini player: only shown once a song has been loaded -->
+  <footer id="miniPlayer" class="mini-player" hidden>
+    <div class="mini-info">
+      <img id="miniThumb" class="mini-thumb" alt="">
+      <p id="miniTitle" class="mini-title">Song title</p>
+    </div>
+    <div class="mini-controls">
+      <button id="miniPrev" class="icon-btn" aria-label="Previous">⏮</button>
+      <button id="miniPlayPause" class="icon-btn" aria-label="Play">▶</button>
+      <button id="miniNext" class="icon-btn" aria-label="Next">⏭</button>
+    </div>
+  </footer>
+
+  <!-- ============ NOW PLAYING SCREEN (hidden at launch, shown only on song select) ============ -->
+  <section id="nowPlayingScreen" class="now-playing-screen" hidden>
+    <button id="backToLibraryBtn" class="back-pill-btn back-pill-btn-large">‹ Back to Library</button>
+
+    <img id="npArtBig" class="np-art-big" alt="">
+    <h2 id="npTitleBig" class="np-title-big">Song title</h2>
+    <p id="npArtistBig" class="np-artist-big">Unknown Artist</p>
+
+    <div class="seek-row">
+      <span id="npCurrentTime">0:00</span>
+      <input type="range" id="seekBar" min="0" max="100" value="0">
+      <span id="npDuration">0:00</span>
+    </div>
+
+    <div class="controls-row">
+      <button id="shuffleBtn" class="icon-btn" aria-label="Shuffle">🔀</button>
+      <button id="prevBtn" class="icon-btn" aria-label="Previous">⏮</button>
+      <button id="playPauseBig" class="icon-btn big" aria-label="Play">▶</button>
+      <button id="nextBtn" class="icon-btn" aria-label="Next">⏭</button>
+      <button id="repeatBtn" class="icon-btn" aria-label="Repeat">🔁</button>
+    </div>
+  </section>
+  <!-- ============ END NOW PLAYING SCREEN ============ -->
+
+  <!-- Add-songs-to-playlist picker overlay -->
+  <section id="addToPlaylistOverlay" class="overlay" hidden>
+    <div class="overlay-header">
+      <button id="addToPlaylistDoneBtn" class="back-pill-btn">Done</button>
+      <h2>Add Songs</h2>
+    </div>
+    <ul id="addToPlaylistList" class="song-list"></ul>
+  </section>
+
+  <audio id="audioEl" preload="metadata"></audio>
+
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
