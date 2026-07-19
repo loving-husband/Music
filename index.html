@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Offline Music Player</title>
+
+<!-- PWA manifest -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a1a1f">
+
+<!-- iOS/iPadOS specific PWA tags (Safari ignores manifest for some of these) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MusicPlayer">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <h1>Your Music</h1>
+    <label class="import-btn" for="fileInput">
+      + Add songs
+      <input type="file" id="fileInput" accept="audio/*" multiple hidden>
+    </label>
+  </header>
+
+  <!-- Status / storage messages -->
+  <p id="statusMsg" class="status-msg" hidden></p>
+
+  <!-- Library list -->
+  <main id="libraryScreen" class="library">
+    <ul id="songList" class="song-list">
+      <!-- songs injected here by app.js -->
+    </ul>
+    <p id="emptyMsg" class="empty-msg">
+      No songs yet. Tap "+ Add songs" to import audio files from this device.
+      They'll be stored on the device and playable offline.
+    </p>
+  </main>
+
+  <!-- Now playing bar (tap to expand to full screen) -->
+  <footer id="nowPlayingBar" class="now-playing-bar" hidden>
+    <img id="npThumb" class="np-thumb" alt="">
+    <div class="np-info">
+      <p id="npTitle" class="np-title">Song title</p>
+    </div>
+    <button id="npPlayPause" class="icon-btn" aria-label="Play">▶</button>
+  </footer>
+
+  <!-- Full Now Playing screen -->
+  <section id="nowPlayingScreen" class="now-playing-screen" hidden>
+    <button id="npClose" class="close-btn" aria-label="Back to Library">‹ Library</button>
+    <img id="npArtBig" class="np-art-big" alt="">
+    <h2 id="npTitleBig" class="np-title-big">Song title</h2>
+
+    <div class="seek-row">
+      <span id="npCurrentTime">0:00</span>
+      <input type="range" id="seekBar" min="0" max="100" value="0">
+      <span id="npDuration">0:00</span>
+    </div>
+
+    <div class="controls-row">
+      <button id="shuffleBtn" class="icon-btn" aria-label="Shuffle">🔀</button>
+      <button id="prevBtn" class="icon-btn" aria-label="Previous">⏮</button>
+      <button id="playPauseBig" class="icon-btn big" aria-label="Play">▶</button>
+      <button id="nextBtn" class="icon-btn" aria-label="Next">⏭</button>
+      <button id="repeatBtn" class="icon-btn" aria-label="Repeat">🔁</button>
+    </div>
+  </section>
+
+  <audio id="audioEl" preload="metadata"></audio>
+
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
